@@ -1,0 +1,31 @@
+spring:
+  profiles:
+    active: local
+
+---
+spring:
+  profiles: local
+  data:
+    mongodb:
+      username: root
+      password: root
+      database: test
+      port: 27017
+      host: localhost
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+server:
+  port: 8080
+
+filepathinfo:
+  input: /doc-conv/input/
+  output: /doc-conv/output/
+  localOutput: /Users/kakao_ent/Downloads/doc-conv-test/output/
+
+debug: false
+
+---
+spring:
+  profiles: dev
+

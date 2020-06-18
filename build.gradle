@@ -1,0 +1,51 @@
+plugins {
+    id 'org.springframework.boot' version '2.3.1.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'java'
+}
+
+group = 'com.jaden'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    swaggerVersion = "2.9.2"
+    commonsIoVersion = "2.7"
+    gsonVersion = "2.8.6"
+}
+
+dependencies {
+    // spring boot
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
+    // swagger
+    implementation "io.springfox:springfox-swagger-ui:${swaggerVersion}"
+    implementation "io.springfox:springfox-swagger2:${swaggerVersion}"
+
+    // commons
+    implementation "commons-io:commons-io:${commonsIoVersion}"
+    implementation "com.google.code.gson:gson:${gsonVersion}"
+
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

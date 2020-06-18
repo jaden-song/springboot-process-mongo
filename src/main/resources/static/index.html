@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./fontawesome/css/all.css">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div id="app"
+        @drop.prevent
+        @dragenter.prevent="changeDropStatus(true)" 
+        @dragover.prevent="changeDropStatus(true)"
+        @dragleave.prevent="changeDropStatus(false)">
+        <div class="upload-file-list">
+            <div class="drop-box" @drop.prevent="dropFile($event)">
+                <div class="description">
+                    <label class="icon-box">
+                        <input type="file" @input="changeUploadInput($event)" multiple hidden>
+                        <i class="fas fa-file-upload"></i>
+                    </label>
+                    <div class="title">Upload a Document File</div>
+                    <div class="subtitle">Click in the icon or drag & drop your file here</div>
+                </div>
+            </div>
+            <div class="list">
+                <div class="search-form">
+                    <div class="search-input">
+                        <i class="fas fa-search"></i>
+                        <input type="text" v-model="searchKeyword" placeholder="Search the files">
+                    </div>
+                </div>
+                <div class="file-group">
+                    <div v-for="fileData in getSearchList()" :data-selected="fileData.id == activeId" @click="selectFile(fileData)" class="file-group-item">
+                        <div class="info-header">
+                            <div class="thumbnail" :data-type="fileData.type">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="metadata">
+                                <div class="name">{{fileData.name}}</div>
+                                <div class="type">{{fileData.type}}</div>
+                            </div>
+                        </div>
+                        <div class="info-body">
+                            <div class="size">{{fileData.size}}</div>
+                            <div class="convert-document-btn" :data-convert="fileData.convert" @click.once="convertFile(fileData)">
+                                <i class="fas fa-long-arrow-alt-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="result">
+                <div class="header">
+                    <div>
+                        <div class="group">
+                            <div class="thumbnail" :data-type="activeFile.type">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="option-btn">
+                                <!-- <i class="fas fa-download"></i> -->
+                            </div>
+                        </div>
+                        <div class="metadata">
+                            <div class="group">
+                                <div class="name">{{activeFile.name}}</div>
+                                <div class="size">{{activeFile.size}}</div>
+                            </div>
+                            <div class="type">{{activeFile.type}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="body">
+                    <template v-if="!activeFile.convert">
+                        Press the Convert button on the file list.
+                    </template>
+                    <template v-else-if="activeFile.convert && activeFile.images.length == 0">
+                        <div class="loading">
+                            <i class="fas fa-spin fa-spinner"></i>
+                            <div style="margin-top: 10px; font-size: 14px;">{{message}}</div>
+                            <div class="btn" @click="getConvertList(activeFile)">리스트 불러오기</div>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div class="image-item" v-for="(data, idx) in activeFile.images" @click="openImageViewer(idx)">
+                            <i class="fas fa-search-plus"></i>
+                            <img :src="getImageURL(data)" alt="">
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+        <transition name="fade">
+            <div v-show="this.visible.background" class="popup-background"></div>
+        </transition>
+        <div class="image-viewer" v-if="activeFile.convert && activeFile.images.length && visible.imageViewer">
+            <div class="header">
+                <div class="page-index">{{viewImageIndex + 1}} / {{activeFile.images.length}}</div>
+                <div class="option-btn-group">
+                    <div class="download-btn">
+                        <a :href="getImageURL(activeFile.images[viewImageIndex])" :download="activeFile.images[viewImageIndex].imageName">
+                            <i class="fas fa-download"></i>
+                        </a>
+                    </div>
+                    <div class="close-btn" @click="closeImageViwer">&times;</div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="left-btn" @click="prevSlide">&lt;</div>
+                <img v-for="(data, idx) in activeFile.images" v-if="idx == viewImageIndex" :src="getImageURL(data)" alt="">
+                <div class="right-btn" @click="nextSlide">&gt;</div>
+            </div>
+            <div class="footer"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./js/app.js"></script>
+</body>
+</html>
