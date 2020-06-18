@@ -4,15 +4,15 @@ ProcessBuilder 를 이용하여 docker에 특정 명령(이미지변환)을 보�
 
 ## REST API (http://localhost:8080/swagger-ui.html)
 * 이미지 변환 요청
-    * POST http://localhost:8090/convert/v1/images
+    * POST http://localhost:8080/convert/v1/images
     * body 예제 { accessKey: xxx, filename: sample.hwp } 
     
 * 이미지 열람 요청
-    * GET http://localhost:8090/convert/v1/images?accessKey=xxx
+    * GET http://localhost:8080/convert/v1/images?accessKey=xxx
     * param 으로 accessKey를 이용하며 변환된 이미지 리스트 응
     
 * 이미지 다운로드
-    * GET http://localhost:8090/convert/v1/images/{accessKey}/{imageName}
+    * GET http://localhost:8080/convert/v1/images/{accessKey}/{imageName}
 
 ## CentOs7 도커 관련
 * Docker 파일생성 (나중에 정리하자)
